@@ -1,0 +1,15 @@
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\bin\Debug\net10.0\AgencyHub.Application.deps.json
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\bin\Debug\net10.0\AgencyHub.Application.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\bin\Debug\net10.0\AgencyHub.Application.pdb
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\bin\Debug\net10.0\AgencyHub.Domain.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\bin\Debug\net10.0\AgencyHub.Domain.pdb
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\AgencyHub.Application.csproj.AssemblyReference.cache
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\AgencyHub.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\AgencyHub.Application.AssemblyInfoInputs.cache
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\AgencyHub.Application.AssemblyInfo.cs
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\AgencyHub.Application.csproj.CoreCompileInputs.cache
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\AgencyHu.F4BFFEC4.Up2Date
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\AgencyHub.Application.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\refint\AgencyHub.Application.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\AgencyHub.Application.pdb
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Application\obj\Debug\net10.0\ref\AgencyHub.Application.dll

@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="AgencyHub.API/AgencyHub.API.csproj" />
+  <Project Path="AgencyHub.Application/AgencyHub.Application.csproj" />
+  <Project Path="AgencyHub.Domain/AgencyHub.Domain.csproj" />
+  <Project Path="AgencyHub.Infrastructure/AgencyHub.Infrastructure.csproj" />
+</Solution>

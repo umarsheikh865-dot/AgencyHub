@@ -1,0 +1,8 @@
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.csproj.AssemblyReference.cache
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.AssemblyInfoInputs.cache
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.AssemblyInfo.cs
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.csproj.CoreCompileInputs.cache
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.MvcApplicationPartsAssemblyInfo.cache
