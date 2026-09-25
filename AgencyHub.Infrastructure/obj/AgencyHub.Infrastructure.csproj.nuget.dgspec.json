@@ -721,6 +721,9 @@
             "projectReferences": {
               "C:\\Users\\Umar\\Desktop\\AgencyHubFolder\\AgencyHub.Application\\AgencyHub.Application.csproj": {
                 "projectPath": "C:\\Users\\Umar\\Desktop\\AgencyHubFolder\\AgencyHub.Application\\AgencyHub.Application.csproj"
+              },
+              "C:\\Users\\Umar\\Desktop\\AgencyHubFolder\\AgencyHub.Domain\\AgencyHub.Domain.csproj": {
+                "projectPath": "C:\\Users\\Umar\\Desktop\\AgencyHubFolder\\AgencyHub.Domain\\AgencyHub.Domain.csproj"
               }
             }
           }
@@ -745,6 +748,12 @@
             "Microsoft.AspNetCore.Http.Abstractions": {
               "target": "Package",
               "version": "[2.3.13, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[10.0.12, )"
             },
             "Microsoft.EntityFrameworkCore.Relational": {
               "target": "Package",

@@ -1,47 +1,94 @@
-﻿using AgencyHub.Domain.Common;
-using AgencyHub.Domain.Entities;
-using Microsoft.AspNetCore.Http;
+﻿using AgencyHub.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace AgencyHub.Infrastructure.Persistence
+namespace AgencyHub.Infrastructure.Persistence;
+
+public class ApplicationDbContext : DbContext
 {
-    public class ApplicationDbContext : DbContext
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
     {
-        private readonly string _tenantId;
+    }
 
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, IHttpContextAccessor httpContextAccessor)
-            : base(options)
+    public DbSet<Tenant> Tenants => Set<Tenant>();
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Role> Roles => Set<Role>();
+    public DbSet<Client> Clients => Set<Client>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        ConfigureTenant(modelBuilder);
+        ConfigureRole(modelBuilder);
+        ConfigureUser(modelBuilder);
+        ConfigureClient(modelBuilder);
+    }
+
+    private static void ConfigureTenant(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Tenant>(entity =>
         {
-            _tenantId = httpContextAccessor.HttpContext?.Items["TenantId"]?.ToString() ?? "default-tenant";
-        }
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).IsRequired().HasMaxLength(200);
+            entity.Property(x => x.Slug).IsRequired().HasMaxLength(100);
+            entity.HasIndex(x => x.Slug).IsUnique();
+            entity.Property(x => x.Email).HasMaxLength(256);
+            entity.Property(x => x.Phone).HasMaxLength(50);
+        });
+    }
 
-        public DbSet<Client> Clients => Set<Client>();
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+    private static void ConfigureRole(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Role>(entity =>
         {
-            base.OnModelCreating(modelBuilder);
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.Name).IsRequired().HasMaxLength(100);
+            entity.HasIndex(x => x.Name).IsUnique();
+        });
+    }
 
-            // Global Query Filter: Automatically filters data so Tenant A never sees Tenant B's data
-            modelBuilder.Entity<Client>().HasQueryFilter(c => c.TenantId == _tenantId);
-        }
-
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    private static void ConfigureUser(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>(entity =>
         {
-            foreach (var entry in ChangeTracker.Entries<BaseEntity>())
-            {
-                switch (entry.State)
-                {
-                    case EntityState.Added:
-                        entry.Entity.CreatedAt = DateTime.UtcNow;
-                        entry.Entity.TenantId = _tenantId; // Automatically stamp record with current TenantId
-                        break;
-                    case EntityState.Modified:
-                        entry.Entity.UpdatedAt = DateTime.UtcNow;
-                        break;
-                }
-            }
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.FirstName).IsRequired().HasMaxLength(100);
+            entity.Property(x => x.LastName).IsRequired().HasMaxLength(100);
+            entity.Property(x => x.Email).IsRequired().HasMaxLength(256);
+            entity.Property(x => x.PasswordHash).IsRequired();
+            entity.HasIndex(x => new { x.TenantId, x.Email }).IsUnique();
 
-            return base.SaveChangesAsync(cancellationToken);
-        }
+            entity.HasOne(x => x.Tenant)
+                .WithMany(x => x.Users)
+                .HasForeignKey(x => x.TenantId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(x => x.Role)
+                .WithMany(x => x.Users)
+                .HasForeignKey(x => x.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+    }
+
+    private static void ConfigureClient(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Client>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+            entity.Property(x => x.CompanyName).IsRequired().HasMaxLength(200);
+            entity.Property(x => x.ContactPerson).IsRequired().HasMaxLength(200);
+            entity.Property(x => x.Email).IsRequired().HasMaxLength(256);
+            entity.Property(x => x.Phone).HasMaxLength(50);
+            entity.Property(x => x.Address).HasMaxLength(500);
+            entity.Property(x => x.Industry).HasMaxLength(100);
+            entity.Property(x => x.Status).IsRequired().HasMaxLength(50);
+            entity.HasIndex(x => new { x.TenantId, x.CompanyName });
+
+            entity.HasOne(x => x.Tenant)
+                .WithMany(x => x.Clients)
+                .HasForeignKey(x => x.TenantId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
     }
 }

@@ -9,10 +9,11 @@
       "AgencyHub.Infrastructure/1.0.0": {
         "dependencies": {
           "AgencyHub.Application": "1.0.0",
+          "AgencyHub.Domain": "1.0.0",
           "Microsoft.AspNetCore.Http.Abstractions": "2.3.13",
+          "Microsoft.EntityFrameworkCore.Design": "10.0.12",
           "Microsoft.EntityFrameworkCore.Relational": "10.0.12",
-          "Microsoft.EntityFrameworkCore.SqlServer": "10.0.12",
-          "Microsoft.EntityFrameworkCore.Tools": "10.0.12"
+          "Microsoft.EntityFrameworkCore.SqlServer": "10.0.12"
         },
         "runtime": {
           "AgencyHub.Infrastructure.dll": {}
@@ -533,11 +534,6 @@
             "assemblyVersion": "10.0.12.0",
             "fileVersion": "10.0.1226.42308"
           }
-        }
-      },
-      "Microsoft.EntityFrameworkCore.Tools/10.0.12": {
-        "dependencies": {
-          "Microsoft.EntityFrameworkCore.Design": "10.0.12"
         }
       },
       "Microsoft.Extensions.Caching.Abstractions/10.0.12": {
@@ -1139,13 +1135,6 @@
       "sha512": "sha512-Wt/JUrctpOPfv3DNcZ6oKeg+FouanIXnrLfB8WN8DdMoqS/bxi9yPrwTKIEFB32qcKTUb5i9AVTCdbQBUid6ZQ==",
       "path": "microsoft.entityframeworkcore.sqlserver/10.0.12",
       "hashPath": "microsoft.entityframeworkcore.sqlserver.10.0.12.nupkg.sha512"
-    },
-    "Microsoft.EntityFrameworkCore.Tools/10.0.12": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-WuU3838sw/6wAADnwhYRPpPlXaDriq7QmrP+x4L+3plXoWI+QMFWHGhYviDjGkwEZ0b2ybOxMUy86vrb0AL9QQ==",
-      "path": "microsoft.entityframeworkcore.tools/10.0.12",
-      "hashPath": "microsoft.entityframeworkcore.tools.10.0.12.nupkg.sha512"
     },
     "Microsoft.Extensions.Caching.Abstractions/10.0.12": {
       "type": "package",

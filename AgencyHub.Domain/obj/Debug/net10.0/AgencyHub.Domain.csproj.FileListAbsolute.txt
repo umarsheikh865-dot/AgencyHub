@@ -9,3 +9,4 @@ C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Domain\obj\Debug\net10.0\AgencyH
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Domain\obj\Debug\net10.0\refint\AgencyHub.Domain.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Domain\obj\Debug\net10.0\AgencyHub.Domain.pdb
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Domain\obj\Debug\net10.0\ref\AgencyHub.Domain.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Domain\obj\Debug\net10.0\AgencyHub.Domain.sourcelink.json

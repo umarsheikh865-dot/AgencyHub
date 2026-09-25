@@ -17,3 +17,4 @@ C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Infrastructure\obj\Debug\net10.0
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Infrastructure\obj\Debug\net10.0\AgencyHub.Infrastructure.pdb
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Infrastructure\obj\Debug\net10.0\AgencyHub.Infrastructure.genruntimeconfig.cache
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Infrastructure\obj\Debug\net10.0\ref\AgencyHub.Infrastructure.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.Infrastructure\obj\Debug\net10.0\AgencyHub.Infrastructure.sourcelink.json

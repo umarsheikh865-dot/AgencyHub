@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AgencyHub.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37a4dbc605a7d705b2d86457e625433d3e1e6551")]
 [assembly: System.Reflection.AssemblyProductAttribute("AgencyHub.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AgencyHub.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
