@@ -1,36 +1,55 @@
-﻿using AgencyHub.Application.Services;
-using AgencyHub.Domain.Entities;
+﻿using AgencyHub.Application.DTOs.Clients;
+using AgencyHub.Application.Interfaces;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AgencyHub.API.Controllers
+namespace AgencyHub.API.Controllers;
+
+[ApiController]
+[Route("api/clients")]
+[Authorize]
+public class ClientsController : ControllerBase
 {
-	[Route("api/[controller]")]
-	[ApiController]
-	public class ClientsController : ControllerBase
-	{
-		private readonly IClientService _clientService;
+    private readonly IClientService _clientService;
 
-		public ClientsController(ClientsController @clientService) // wait, use IClientService
-		{
-		}
+    public ClientsController(
+        IClientService clientService)
+    {
+        _clientService = clientService;
+    }
 
-		public ClientsController(IClientService clientService)
-		{
-			_clientService = clientService;
-		}
+    // =========================================================
+    // GET CLIENTS
+    // =========================================================
 
-		[HttpGet]
-		public async Task<IActionResult> GetAll()
-		{
-			var clients = await _clientService.GetAllClientsAsync();
-			return Ok(clients);
-		}
+    [HttpGet]
+    public async Task<IActionResult> GetAll(
+        [FromQuery] ClientQueryRequest request)
+    {
+        var result =
+            await _clientService
+                .GetClientsAsync(request);
 
-		[HttpPost]
-		public async Task<IActionResult> Create([FromBody] Client client)
-		{
-			var createdClient = await _clientService.CreateClientAsync(client);
-			return Ok(createdClient);
-		}
-	}
+        return Ok(result);
+    }
+
+    // =========================================================
+    // CREATE CLIENT
+    // Only AgencyAdmin
+    // =========================================================
+
+    [HttpPost]
+    [Authorize(Roles = "AgencyAdmin")]
+    public async Task<IActionResult> Create(
+        CreateClientRequest request)
+    {
+        var client =
+            await _clientService
+                .CreateClientAsync(request);
+
+        return Created(
+            $"/api/clients/{client.Id}",
+            client);
+    }
 }

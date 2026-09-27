@@ -5,15 +5,23 @@ namespace AgencyHub.Infrastructure.Persistence;
 
 public class ApplicationDbContext : DbContext
 {
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options)
         : base(options)
     {
     }
 
     public DbSet<Tenant> Tenants => Set<Tenant>();
+
     public DbSet<User> Users => Set<User>();
+
     public DbSet<Role> Roles => Set<Role>();
+
     public DbSet<Client> Clients => Set<Client>();
+
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+
+    public DbSet<Project> Projects => Set<Project>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -23,6 +31,8 @@ public class ApplicationDbContext : DbContext
         ConfigureRole(modelBuilder);
         ConfigureUser(modelBuilder);
         ConfigureClient(modelBuilder);
+        ConfigureRefreshToken(modelBuilder);
+        ConfigureProject(modelBuilder);
     }
 
     private static void ConfigureTenant(ModelBuilder modelBuilder)
@@ -30,11 +40,23 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Tenant>(entity =>
         {
             entity.HasKey(x => x.Id);
-            entity.Property(x => x.Name).IsRequired().HasMaxLength(200);
-            entity.Property(x => x.Slug).IsRequired().HasMaxLength(100);
-            entity.HasIndex(x => x.Slug).IsUnique();
-            entity.Property(x => x.Email).HasMaxLength(256);
-            entity.Property(x => x.Phone).HasMaxLength(50);
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(x => x.Slug)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.HasIndex(x => x.Slug)
+                .IsUnique();
+
+            entity.Property(x => x.Email)
+                .HasMaxLength(256);
+
+            entity.Property(x => x.Phone)
+                .HasMaxLength(50);
         });
     }
 
@@ -43,8 +65,13 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Role>(entity =>
         {
             entity.HasKey(x => x.Id);
-            entity.Property(x => x.Name).IsRequired().HasMaxLength(100);
-            entity.HasIndex(x => x.Name).IsUnique();
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.HasIndex(x => x.Name)
+                .IsUnique();
         });
     }
 
@@ -53,11 +80,28 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<User>(entity =>
         {
             entity.HasKey(x => x.Id);
-            entity.Property(x => x.FirstName).IsRequired().HasMaxLength(100);
-            entity.Property(x => x.LastName).IsRequired().HasMaxLength(100);
-            entity.Property(x => x.Email).IsRequired().HasMaxLength(256);
-            entity.Property(x => x.PasswordHash).IsRequired();
-            entity.HasIndex(x => new { x.TenantId, x.Email }).IsUnique();
+
+            entity.Property(x => x.FirstName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(x => x.LastName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(x => x.Email)
+                .IsRequired()
+                .HasMaxLength(256);
+
+            entity.Property(x => x.PasswordHash)
+                .IsRequired();
+
+            entity.HasIndex(x => new
+            {
+                x.TenantId,
+                x.Email
+            })
+            .IsUnique();
 
             entity.HasOne(x => x.Tenant)
                 .WithMany(x => x.Users)
@@ -76,17 +120,98 @@ public class ApplicationDbContext : DbContext
         modelBuilder.Entity<Client>(entity =>
         {
             entity.HasKey(x => x.Id);
-            entity.Property(x => x.CompanyName).IsRequired().HasMaxLength(200);
-            entity.Property(x => x.ContactPerson).IsRequired().HasMaxLength(200);
-            entity.Property(x => x.Email).IsRequired().HasMaxLength(256);
-            entity.Property(x => x.Phone).HasMaxLength(50);
-            entity.Property(x => x.Address).HasMaxLength(500);
-            entity.Property(x => x.Industry).HasMaxLength(100);
-            entity.Property(x => x.Status).IsRequired().HasMaxLength(50);
-            entity.HasIndex(x => new { x.TenantId, x.CompanyName });
+
+            entity.Property(x => x.CompanyName)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(x => x.ContactPerson)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(x => x.Email)
+                .IsRequired()
+                .HasMaxLength(256);
+
+            entity.Property(x => x.Phone)
+                .HasMaxLength(50);
+
+            entity.Property(x => x.Address)
+                .HasMaxLength(500);
+
+            entity.Property(x => x.Industry)
+                .HasMaxLength(100);
+
+            entity.Property(x => x.Status)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.HasIndex(x => new
+            {
+                x.TenantId,
+                x.CompanyName
+            });
 
             entity.HasOne(x => x.Tenant)
                 .WithMany(x => x.Clients)
+                .HasForeignKey(x => x.TenantId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+    }
+
+    private static void ConfigureRefreshToken(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<RefreshToken>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Token)
+                .IsRequired()
+                .HasMaxLength(500);
+
+            entity.HasIndex(x => x.Token)
+                .IsUnique();
+
+            entity.HasOne(x => x.User)
+                .WithMany()
+                .HasForeignKey(x => x.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+        });
+    }
+
+    private static void ConfigureProject(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Project>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Name)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.Property(x => x.Description)
+                .HasMaxLength(1000);
+
+            entity.Property(x => x.Status)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            entity.Property(x => x.Budget)
+                .HasColumnType("decimal(18,2)");
+
+            entity.HasIndex(x => new
+            {
+                x.TenantId,
+                x.Name
+            });
+
+            entity.HasOne(x => x.Client)
+                .WithMany()
+                .HasForeignKey(x => x.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne<Tenant>()
+                .WithMany()
                 .HasForeignKey(x => x.TenantId)
                 .OnDelete(DeleteBehavior.Restrict);
         });

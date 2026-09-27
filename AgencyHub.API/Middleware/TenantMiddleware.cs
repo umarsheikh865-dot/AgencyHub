@@ -1,28 +1,59 @@
-﻿namespace AgencyHub.API.Middleware
+﻿namespace AgencyHub.API.Middleware;
+
+public class TenantMiddleware
 {
-    public class TenantMiddleware
+    private readonly RequestDelegate _next;
+
+    public TenantMiddleware(
+        RequestDelegate next)
     {
-        private readonly RequestDelegate _next;
+        _next = next;
+    }
 
-        public TenantMiddleware(RequestDelegate next)
+    public async Task InvokeAsync(
+        HttpContext context)
+    {
+        if (context.User.Identity?.IsAuthenticated == true)
         {
-            _next = next;
-        }
+            var tenantId =
+                context.User
+                    .FindFirst("tenantId")
+                    ?.Value;
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            const string tenantHeaderName = "X-Tenant-Id";
-            string tenantId = "default-tenant";
-
-            if (context.Request.Headers.TryGetValue(tenantHeaderName, out var extractedTenantId) && !string.IsNullOrEmpty(extractedTenantId))
+            if (string.IsNullOrWhiteSpace(tenantId))
             {
-                tenantId = extractedTenantId!;
+                context.Response.StatusCode = 401;
+
+                await context.Response.WriteAsJsonAsync(
+                    new
+                    {
+                        message =
+                            "Tenant information is missing."
+                    });
+
+                return;
             }
 
-            // Store TenantId in HttpContext items for EF Core DbContext to read
-            context.Items["TenantId"] = tenantId;
+            if (!Guid.TryParse(
+                tenantId,
+                out _))
+            {
+                context.Response.StatusCode = 401;
 
-            await _next(context);
+                await context.Response.WriteAsJsonAsync(
+                    new
+                    {
+                        message =
+                            "Invalid tenant information."
+                    });
+
+                return;
+            }
+
+            context.Items["TenantId"] =
+                tenantId;
         }
+
+        await _next(context);
     }
 }

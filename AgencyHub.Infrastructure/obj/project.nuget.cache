@@ -1,11 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "oJ50n6FyQ8Y=",
+  "dgSpecHash": "S5mC1iE5p3U=",
   "success": true,
   "projectFilePath": "C:\\Users\\Umar\\Desktop\\AgencyHubFolder\\AgencyHub.Infrastructure\\AgencyHub.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Umar\\.nuget\\packages\\azure.core\\1.50.0\\azure.core.1.50.0.nupkg.sha512",
     "C:\\Users\\Umar\\.nuget\\packages\\azure.identity\\1.17.1\\azure.identity.1.17.1.nupkg.sha512",
+    "C:\\Users\\Umar\\.nuget\\packages\\bcrypt.net-next\\4.2.0\\bcrypt.net-next.4.2.0.nupkg.sha512",
+    "C:\\Users\\Umar\\.nuget\\packages\\fluentvalidation\\12.1.1\\fluentvalidation.12.1.1.nupkg.sha512",
+    "C:\\Users\\Umar\\.nuget\\packages\\fluentvalidation.dependencyinjectionextensions\\12.1.1\\fluentvalidation.dependencyinjectionextensions.12.1.1.nupkg.sha512",
     "C:\\Users\\Umar\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\Umar\\.nuget\\packages\\microsoft.aspnetcore.http.abstractions\\2.3.13\\microsoft.aspnetcore.http.abstractions.2.3.13.nupkg.sha512",
     "C:\\Users\\Umar\\.nuget\\packages\\microsoft.aspnetcore.http.features\\2.3.12\\microsoft.aspnetcore.http.features.2.3.12.nupkg.sha512",

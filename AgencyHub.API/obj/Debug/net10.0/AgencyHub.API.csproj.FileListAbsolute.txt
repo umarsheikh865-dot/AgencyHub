@@ -17,9 +17,12 @@ C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\AgencyHub.
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\AgencyHub.API.pdb
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Azure.Core.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Azure.Identity.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\BCrypt-Net-Next.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Humanizer.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.AspNetCore.OpenApi.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.Bcl.Cryptography.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.Build.Framework.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.CodeAnalysis.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.CodeAnalysis.CSharp.dll
@@ -34,6 +37,7 @@ C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.Relational.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.EntityFrameworkCore.SqlServer.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.Identity.Client.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.Identity.Client.Broker.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\Microsoft.Identity.Client.Extensions.Msal.dll
@@ -167,10 +171,12 @@ C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\staticweba
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\staticwebassets.development.json
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\staticwebassets.build.endpoints.json
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\swae.build.ex.cache
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHu.D5D48B7A.Up2Date
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\refint\AgencyHub.API.dll
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.pdb
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\AgencyHub.API.genruntimeconfig.cache
 C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\ref\AgencyHub.API.dll
-C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\FluentValidation.dll
+C:\Users\Umar\Desktop\AgencyHubFolder\AgencyHub.API\bin\Debug\net10.0\FluentValidation.DependencyInjectionExtensions.dll
