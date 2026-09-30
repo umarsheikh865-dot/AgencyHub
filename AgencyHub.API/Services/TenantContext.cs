@@ -1,56 +1,51 @@
 ﻿using System.Security.Claims;
-
 using AgencyHub.Application.Interfaces;
 
 namespace AgencyHub.API.Services;
 
 public class TenantContext : ITenantContext
 {
-    private readonly IHttpContextAccessor
-        _httpContextAccessor;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public TenantContext(
-        IHttpContextAccessor httpContextAccessor)
+    public TenantContext(IHttpContextAccessor httpContextAccessor)
     {
-        _httpContextAccessor =
-            httpContextAccessor;
+        _httpContextAccessor = httpContextAccessor;
     }
 
-    public Guid? TenantId
+    public Guid TenantId
     {
         get
         {
-            var value =
-                _httpContextAccessor
-                    .HttpContext?
-                    .User
-                    .FindFirst("tenantId")
-                    ?.Value;
+            var value = _httpContextAccessor
+                .HttpContext?
+                .User
+                .FindFirst("tenantId")?
+                .Value;
 
-            return Guid.TryParse(
-                value,
-                out var id)
-                ? id
-                : null;
+            return Guid.TryParse(value, out var tenantId)
+                ? tenantId
+                : Guid.Empty;
         }
     }
 
-    public Guid? UserId
+    public Guid UserId
     {
         get
         {
-            var value =
-                _httpContextAccessor
+            var value = _httpContextAccessor
+                .HttpContext?
+                .User
+                .FindFirst("userId")?
+                .Value
+                ?? _httpContextAccessor
                     .HttpContext?
                     .User
-                    .FindFirst("userId")
-                    ?.Value;
+                    .FindFirst(ClaimTypes.NameIdentifier)?
+                    .Value;
 
-            return Guid.TryParse(
-                value,
-                out var id)
-                ? id
-                : null;
+            return Guid.TryParse(value, out var userId)
+                ? userId
+                : Guid.Empty;
         }
     }
 
@@ -58,14 +53,17 @@ public class TenantContext : ITenantContext
         _httpContextAccessor
             .HttpContext?
             .User
-            .FindFirst(ClaimTypes.Role)
-            ?.Value;
+            .FindFirst(ClaimTypes.Role)?
+            .Value;
 
     public bool IsAuthenticated =>
         _httpContextAccessor
             .HttpContext?
             .User
             .Identity?
-            .IsAuthenticated
-        ?? false;
+            .IsAuthenticated == true;
+
+    Guid? ITenantContext.TenantId => TenantId;
+
+    Guid? ITenantContext.UserId => UserId;
 }

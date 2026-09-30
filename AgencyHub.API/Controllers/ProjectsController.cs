@@ -17,6 +17,9 @@ public class ProjectsController : ControllerBase
         _projectService = projectService;
     }
 
+    /// <summary>
+    /// Retrieves a paginated, filtered, searched, and sorted list of projects for the current tenant.
+    /// </summary>
     [HttpGet]
     public async Task<IActionResult> GetProjects([FromQuery] ProjectQueryRequest request)
     {
@@ -24,6 +27,9 @@ public class ProjectsController : ControllerBase
         return Ok(result);
     }
 
+    /// <summary>
+    /// Retrieves a specific project by its unique identifier.
+    /// </summary>
     [HttpGet("{id:guid}")]
     public async Task<IActionResult> GetProject(Guid id)
     {
@@ -35,14 +41,22 @@ public class ProjectsController : ControllerBase
         return Ok(project);
     }
 
+    /// <summary>
+    /// Creates a new project for the current tenant (Restricted to AgencyAdmin).
+    /// </summary>
     [HttpPost]
+    [Authorize(Roles = "AgencyAdmin")]
     public async Task<IActionResult> CreateProject([FromBody] CreateProjectRequest request)
     {
         var project = await _projectService.CreateProjectAsync(request);
         return CreatedAtAction(nameof(GetProject), new { id = project.Id }, project);
     }
 
+    /// <summary>
+    /// Updates an existing project (Restricted to AgencyAdmin).
+    /// </summary>
     [HttpPut("{id:guid}")]
+    [Authorize(Roles = "AgencyAdmin")]
     public async Task<IActionResult> UpdateProject(Guid id, [FromBody] UpdateProjectRequest request)
     {
         var project = await _projectService.UpdateProjectAsync(id, request);
@@ -53,7 +67,11 @@ public class ProjectsController : ControllerBase
         return Ok(project);
     }
 
+    /// <summary>
+    /// Deletes a project by its unique identifier (Restricted to AgencyAdmin).
+    /// </summary>
     [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "AgencyAdmin")]
     public async Task<IActionResult> DeleteProject(Guid id)
     {
         var deleted = await _projectService.DeleteProjectAsync(id);

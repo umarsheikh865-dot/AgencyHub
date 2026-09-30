@@ -1,18 +1,13 @@
 using System.Text;
-
+using AgencyHub.Application.Interfaces;
+using AgencyHub.API.Services;
 using AgencyHub.API.Middleware;
 using AgencyHub.API.Options;
-using AgencyHub.API.Services;
-
-using AgencyHub.Application.Interfaces;
 using AgencyHub.Application.Services;
 using AgencyHub.Application.Validators;
-
 using AgencyHub.Infrastructure;
 using AgencyHub.Infrastructure.Persistence;
-
 using FluentValidation;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -22,10 +17,31 @@ using Microsoft.OpenApi;
 var builder = WebApplication.CreateBuilder(args);
 
 // ============================================================
-// CONTROLLERS
+// CONTROLLERS & CUSTOM VALIDATION ERROR RESPONSE (STEP 4)
 // ============================================================
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = actionContext =>
+        {
+            var errors = actionContext.ModelState
+                .Where(e => e.Value?.Errors.Count > 0)
+                .ToDictionary(
+                    kvp => kvp.Key,
+                    kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+
+            var errorResponse = new
+            {
+                status = 400,
+                title = "Validation Failed",
+                errors = errors
+            };
+
+            return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(errorResponse);
+        };
+    });
 
 // ============================================================
 // HTTP CONTEXT ACCESSOR
@@ -37,32 +53,26 @@ builder.Services.AddHttpContextAccessor();
 // TENANT CONTEXT
 // ============================================================
 
-builder.Services.AddScoped<
-    ITenantContext,
-    TenantContext>();
+builder.Services.AddScoped<ITenantContext, TenantContext>();
 
 // ============================================================
 // FLUENT VALIDATION
 // ============================================================
 
 builder.Services
-    .AddValidatorsFromAssemblyContaining<
-        CreateClientRequestValidator>();
+    .AddValidatorsFromAssemblyContaining<CreateClientRequestValidator>();
 
 // ============================================================
 // INFRASTRUCTURE
 // ============================================================
 
-builder.Services.AddInfrastructure(
-    builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration);
 
 // ============================================================
 // APPLICATION SERVICES
 // ============================================================
 
-builder.Services.AddScoped<
-    IAuthService,
-    AuthenticationService>();
+builder.Services.AddScoped<IAuthService, AuthenticationService>();
 
 builder.Services.AddScoped<
     IClientService,
@@ -72,30 +82,26 @@ builder.Services.AddScoped<
     IProjectService,
     AgencyHub.API.ProjectService>();
 
+builder.Services.AddScoped<
+    IProjectTaskService,
+    AgencyHub.API.ProjectTaskService>();
+
 // ============================================================
 // JWT SETTINGS
 // ============================================================
 
 builder.Services.Configure<JwtSettings>(
-    builder.Configuration.GetSection(
-        "JwtSettings"));
+    builder.Configuration.GetSection("JwtSettings"));
 
 // ============================================================
-// JWT CONFIGURATION
+// READ JWT CONFIGURATION
 // ============================================================
 
-var jwtSettings =
-    builder.Configuration.GetSection(
-        "JwtSettings");
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
-var jwtKey =
-    jwtSettings["Key"];
-
-var jwtIssuer =
-    jwtSettings["Issuer"];
-
-var jwtAudience =
-    jwtSettings["Audience"];
+var jwtKey = jwtSettings["Key"];
+var jwtIssuer = jwtSettings["Issuer"];
+var jwtAudience = jwtSettings["Audience"];
 
 if (string.IsNullOrWhiteSpace(jwtKey))
 {
@@ -120,41 +126,72 @@ if (string.IsNullOrWhiteSpace(jwtAudience))
 // ============================================================
 
 builder.Services
-    .AddAuthentication(
-        JwtBearerDefaults.AuthenticationScheme)
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters =
             new TokenValidationParameters
             {
+                // --------------------------------------------
+                // SIGNATURE
+                // --------------------------------------------
+
                 ValidateIssuerSigningKey = true,
 
                 IssuerSigningKey =
                     new SymmetricSecurityKey(
-                        Encoding.UTF8.GetBytes(
-                            jwtKey)),
+                        Encoding.UTF8.GetBytes(jwtKey)),
+
+                // --------------------------------------------
+                // ISSUER
+                // --------------------------------------------
 
                 ValidateIssuer = true,
 
-                ValidIssuer =
-                    jwtIssuer,
+                ValidIssuer = jwtIssuer,
+
+                // --------------------------------------------
+                // AUDIENCE
+                // --------------------------------------------
 
                 ValidateAudience = true,
 
-                ValidAudience =
-                    jwtAudience,
+                ValidAudience = jwtAudience,
+
+                // --------------------------------------------
+                // EXPIRATION
+                // --------------------------------------------
 
                 ValidateLifetime = true,
 
-                ClockSkew =
-                    TimeSpan.Zero,
+                ClockSkew = TimeSpan.Zero,
 
-                NameClaimType =
-                    "userId",
+                // --------------------------------------------
+                // CLAIMS
+                // --------------------------------------------
+
+                NameClaimType = "userId",
 
                 RoleClaimType =
                     System.Security.Claims.ClaimTypes.Role
             };
+
+        // ----------------------------------------------------
+        // OPTIONAL DEBUGGING
+        // ----------------------------------------------------
+        // Temporarily useful while fixing JWT problems.
+        // Do NOT keep detailed token logging in production.
+
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine(
+                    $"JWT Authentication Failed: {context.Exception.Message}");
+
+                return Task.CompletedTask;
+            }
+        };
     });
 
 // ============================================================
@@ -196,13 +233,12 @@ builder.Services
         {
             "live"
         })
-    .AddDbContextCheck<
-        ApplicationDbContext>(
-            "database",
-            tags: new[]
-            {
-                "ready"
-            });
+    .AddDbContextCheck<ApplicationDbContext>(
+        "database",
+        tags: new[]
+        {
+            "ready"
+        });
 
 // ============================================================
 // SWAGGER
@@ -216,14 +252,9 @@ builder.Services.AddSwaggerGen(options =>
         "v1",
         new OpenApiInfo
         {
-            Title =
-                "AgencyHub API",
-
-            Version =
-                "v1",
-
-            Description =
-                "Multi-tenant agency management API"
+            Title = "AgencyHub API",
+            Version = "v1",
+            Description = "Multi-tenant agency management API"
         });
 
     // --------------------------------------------------------
@@ -234,20 +265,15 @@ builder.Services.AddSwaggerGen(options =>
         "Bearer",
         new OpenApiSecurityScheme
         {
-            Name =
-                "Authorization",
+            Name = "Authorization",
 
-            Type =
-                SecuritySchemeType.Http,
+            Type = SecuritySchemeType.Http,
 
-            Scheme =
-                "bearer",
+            Scheme = "bearer",
 
-            BearerFormat =
-                "JWT",
+            BearerFormat = "JWT",
 
-            In =
-                ParameterLocation.Header,
+            In = ParameterLocation.Header,
 
             Description =
                 "Enter your JWT token. Example: Bearer {token}"
@@ -255,7 +281,6 @@ builder.Services.AddSwaggerGen(options =>
 
     // --------------------------------------------------------
     // JWT SECURITY REQUIREMENT
-    // Swashbuckle/OpenAPI v10+
     // --------------------------------------------------------
 
     options.AddSecurityRequirement(
@@ -280,17 +305,20 @@ var app = builder.Build();
 // DATABASE SEEDING
 // ============================================================
 
-using (var scope =
-       app.Services.CreateScope())
+using (var scope = app.Services.CreateScope())
 {
     var dbContext =
         scope.ServiceProvider
-            .GetRequiredService<
-                ApplicationDbContext>();
+            .GetRequiredService<ApplicationDbContext>();
 
-    await DbSeeder.SeedAsync(
-        dbContext);
+    await DbSeeder.SeedAsync(dbContext);
 }
+
+// ============================================================
+// GLOBAL EXCEPTION HANDLING (PLACED AT TOP OF PIPELINE)
+// ============================================================
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // ============================================================
 // SWAGGER
@@ -306,8 +334,7 @@ if (app.Environment.IsDevelopment())
             "/swagger/v1/swagger.json",
             "AgencyHub API v1");
 
-        options.RoutePrefix =
-            "swagger";
+        options.RoutePrefix = "swagger";
     });
 }
 
@@ -330,18 +357,10 @@ app.UseCors("Frontend");
 app.UseAuthentication();
 
 // ============================================================
-// GLOBAL EXCEPTION HANDLING
-// ============================================================
-
-app.UseMiddleware<
-    GlobalExceptionMiddleware>();
-
-// ============================================================
 // TENANT MIDDLEWARE
 // ============================================================
 
-app.UseMiddleware<
-    TenantMiddleware>();
+app.UseMiddleware<TenantMiddleware>();
 
 // ============================================================
 // AUTHORIZATION
@@ -359,8 +378,7 @@ app.MapControllers();
 // HEALTH CHECKS
 // ============================================================
 
-app.MapHealthChecks(
-    "/health");
+app.MapHealthChecks("/health");
 
 app.MapHealthChecks(
     "/health/live",

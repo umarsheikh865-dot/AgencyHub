@@ -3,4 +3,5 @@
   <Project Path="AgencyHub.Application/AgencyHub.Application.csproj" />
   <Project Path="AgencyHub.Domain/AgencyHub.Domain.csproj" />
   <Project Path="AgencyHub.Infrastructure/AgencyHub.Infrastructure.csproj" />
+  <Project Path="AgencyHub.Tests/AgencyHub.Tests.csproj" />
 </Solution>

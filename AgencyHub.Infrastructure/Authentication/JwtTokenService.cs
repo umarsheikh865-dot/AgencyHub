@@ -15,110 +15,146 @@ public class JwtTokenService : IJwtTokenService
 {
     private readonly IConfiguration _configuration;
 
-    public JwtTokenService(
-        IConfiguration configuration)
+    public JwtTokenService(IConfiguration configuration)
     {
-        _configuration =
-            configuration;
+        _configuration = configuration;
     }
 
-    public string GenerateAccessToken(
-        User user)
+    // ============================================================
+    // GENERATE ACCESS TOKEN
+    // ============================================================
+
+    public string GenerateAccessToken(User user)
     {
-        var settings =
-            _configuration.GetSection(
-                "JwtSettings");
+        // --------------------------------------------------------
+        // Read JWT settings from appsettings.json
+        // --------------------------------------------------------
 
         var key =
-            settings["Key"];
+            _configuration["JwtSettings:Key"];
 
         var issuer =
-            settings["Issuer"];
+            _configuration["JwtSettings:Issuer"];
 
         var audience =
-            settings["Audience"];
+            _configuration["JwtSettings:Audience"];
+
+        // --------------------------------------------------------
+        // Validate configuration
+        // --------------------------------------------------------
 
         if (string.IsNullOrWhiteSpace(key))
         {
             throw new InvalidOperationException(
-                "JWT Key is missing.");
+                "JWT Key is missing from configuration.");
         }
 
         if (string.IsNullOrWhiteSpace(issuer))
         {
             throw new InvalidOperationException(
-                "JWT Issuer is missing.");
+                "JWT Issuer is missing from configuration.");
         }
 
         if (string.IsNullOrWhiteSpace(audience))
         {
             throw new InvalidOperationException(
-                "JWT Audience is missing.");
+                "JWT Audience is missing from configuration.");
         }
 
-        var claims =
-            new List<Claim>
-            {
-                new(
-                    JwtRegisteredClaimNames.Sub,
-                    user.Id.ToString()),
+        // --------------------------------------------------------
+        // Create claims
+        // --------------------------------------------------------
 
-                new(
-                    "userId",
-                    user.Id.ToString()),
+        var claims = new List<Claim>
+        {
+            new(
+                JwtRegisteredClaimNames.Sub,
+                user.Id.ToString()),
 
-                new(
-                    "tenantId",
-                    user.TenantId.ToString()),
+            new(
+                "userId",
+                user.Id.ToString()),
 
-                new(
-                    "email",
-                    user.Email),
+            new(
+                "tenantId",
+                user.TenantId.ToString()),
 
-                new(
-                    ClaimTypes.Email,
-                    user.Email),
+            new(
+                "email",
+                user.Email),
 
-                new(
-                    ClaimTypes.Role,
-                    user.Role.Name),
+            new(
+                ClaimTypes.Email,
+                user.Email),
 
-                new(
-                    "role",
-                    user.Role.Name)
-            };
+            new(
+                ClaimTypes.Role,
+                user.Role.Name),
+
+            new(
+                "role",
+                user.Role.Name)
+        };
+
+        // --------------------------------------------------------
+        // Create signing key
+        // --------------------------------------------------------
 
         var securityKey =
             new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(
-                    key));
+                Encoding.UTF8.GetBytes(key));
+
+        // --------------------------------------------------------
+        // Create signing credentials
+        // --------------------------------------------------------
 
         var credentials =
             new SigningCredentials(
                 securityKey,
                 SecurityAlgorithms.HmacSha256);
 
+        // --------------------------------------------------------
+        // Token expiration
+        // --------------------------------------------------------
+
         var expiration =
             DateTime.UtcNow.AddMinutes(
                 GetAccessTokenExpirationMinutes());
+
+        // --------------------------------------------------------
+        // Create JWT
+        // --------------------------------------------------------
 
         var token =
             new JwtSecurityToken(
                 issuer: issuer,
                 audience: audience,
                 claims: claims,
+                notBefore: DateTime.UtcNow,
                 expires: expiration,
                 signingCredentials: credentials);
+
+        // --------------------------------------------------------
+        // Convert JWT to string
+        // --------------------------------------------------------
 
         return new JwtSecurityTokenHandler()
             .WriteToken(token);
     }
+
+    // ============================================================
+    // GET ACCESS TOKEN EXPIRATION
+    // ============================================================
 
     public DateTime GetAccessTokenExpiration()
     {
         return DateTime.UtcNow.AddMinutes(
             GetAccessTokenExpirationMinutes());
     }
+
+    // ============================================================
+    // GENERATE REFRESH TOKEN
+    // ============================================================
 
     public string GenerateRefreshToken()
     {
@@ -128,6 +164,10 @@ public class JwtTokenService : IJwtTokenService
         return Convert.ToBase64String(
             randomBytes);
     }
+
+    // ============================================================
+    // GET ACCESS TOKEN EXPIRATION MINUTES
+    // ============================================================
 
     private int GetAccessTokenExpirationMinutes()
     {

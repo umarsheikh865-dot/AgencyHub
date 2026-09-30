@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AgencyHub.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+049c61176d9e8092462f6a631aad8d48dc059468")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b76a19c3c58288ae704064ea08df77bde71b325d")]
 [assembly: System.Reflection.AssemblyProductAttribute("AgencyHub.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AgencyHub.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

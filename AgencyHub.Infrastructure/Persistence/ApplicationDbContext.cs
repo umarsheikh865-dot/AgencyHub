@@ -23,6 +23,8 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<Project> Projects => Set<Project>();
 
+    public DbSet<ProjectTask> ProjectTasks => Set<ProjectTask>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -33,6 +35,7 @@ public class ApplicationDbContext : DbContext
         ConfigureClient(modelBuilder);
         ConfigureRefreshToken(modelBuilder);
         ConfigureProject(modelBuilder);
+        ConfigureProjectTask(modelBuilder);
     }
 
     private static void ConfigureTenant(ModelBuilder modelBuilder)
@@ -190,20 +193,14 @@ public class ApplicationDbContext : DbContext
                 .HasMaxLength(200);
 
             entity.Property(x => x.Description)
-                .HasMaxLength(1000);
+                .HasMaxLength(2000);
 
             entity.Property(x => x.Status)
                 .IsRequired()
                 .HasMaxLength(50);
 
             entity.Property(x => x.Budget)
-                .HasColumnType("decimal(18,2)");
-
-            entity.HasIndex(x => new
-            {
-                x.TenantId,
-                x.Name
-            });
+                .HasPrecision(18, 2);
 
             entity.HasOne(x => x.Client)
                 .WithMany()
@@ -214,6 +211,69 @@ public class ApplicationDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(x => x.TenantId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasIndex(x => new
+            {
+                x.TenantId,
+                x.ClientId
+            });
+
+            entity.HasIndex(x => new
+            {
+                x.TenantId,
+                x.Status
+            });
+        });
+    }
+
+    private static void ConfigureProjectTask(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<ProjectTask>(entity =>
+        {
+            entity.HasKey(x => x.Id);
+
+            entity.Property(x => x.Title)
+                .HasMaxLength(200)
+                .IsRequired();
+
+            entity.Property(x => x.Description)
+                .HasMaxLength(4000);
+
+            entity.Property(x => x.Status)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.Property(x => x.Priority)
+                .HasMaxLength(50)
+                .IsRequired();
+
+            entity.HasOne(x => x.Project)
+                .WithMany()
+                .HasForeignKey(x => x.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(x => x.AssignedToUser)
+                .WithMany()
+                .HasForeignKey(x => x.AssignedToUserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasIndex(x => new
+            {
+                x.TenantId,
+                x.ProjectId
+            });
+
+            entity.HasIndex(x => new
+            {
+                x.TenantId,
+                x.Status
+            });
+
+            entity.HasIndex(x => new
+            {
+                x.TenantId,
+                x.Priority
+            });
         });
     }
 }

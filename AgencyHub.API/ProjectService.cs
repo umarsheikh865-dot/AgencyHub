@@ -51,9 +51,26 @@ public class ProjectService : IProjectService
             query = query.Where(x => x.ClientId == request.ClientId.Value);
         }
 
+        // ============================================================
+        // DYNAMIC SORTING
+        // ============================================================
+        var sortBy = request.SortBy?.Trim().ToLower();
+        var sortOrder = request.SortOrder?.Trim().ToLower();
+
+        query = (sortBy, sortOrder) switch
+        {
+            ("name", "asc") => query.OrderBy(x => x.Name),
+            ("name", "desc") => query.OrderByDescending(x => x.Name),
+            ("status", "asc") => query.OrderBy(x => x.Status),
+            ("status", "desc") => query.OrderByDescending(x => x.Status),
+            ("budget", "asc") => query.OrderBy(x => x.Budget),
+            ("budget", "desc") => query.OrderByDescending(x => x.Budget),
+            ("createdat", "asc") => query.OrderBy(x => x.CreatedAt),
+            _ => query.OrderByDescending(x => x.CreatedAt) // Default sorting: Newest first
+        };
+
         var totalCount = await query.CountAsync();
         var items = await query
-            .OrderByDescending(x => x.CreatedAt)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
             .ToListAsync();
