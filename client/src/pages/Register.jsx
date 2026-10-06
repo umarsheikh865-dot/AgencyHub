@@ -2,79 +2,249 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { register } from "../services/authService";
 
-export default function Register() {
+function Register() {
     const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         agencyName: "",
         agencySlug: "",
-        fullName: "",
+        agencyEmail: "",
+        firstName: "",
+        lastName: "",
         email: "",
-        password: ""
+        password: "",
+        phone: ""
     });
-    const [error, setError] = useState("");
+
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError("");
+
         setLoading(true);
+        setError("");
+        setSuccess("");
 
         try {
             await register(formData);
-            alert("Registration successful! Please log in.");
-            navigate("/login");
-        } catch (err) {
-            setError(err.response?.data?.message || "Registration failed. Please check your inputs.");
+
+            setSuccess(
+                "Registration successful. Redirecting to login..."
+            );
+
+            setTimeout(() => {
+                navigate("/login");
+            }, 1500);
+
+        } catch (error) {
+            console.error(error);
+
+            const validationErrors =
+                error.response?.data?.errors;
+
+            if (validationErrors) {
+                setError(
+                    Object.values(validationErrors)
+                        .flat()
+                        .join(" ")
+                );
+            } else {
+                setError(
+                    error.response?.data?.message ||
+                    "Registration failed."
+                );
+            }
+
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <div style={{ maxWidth: "450px", margin: "40px auto", padding: "30px", background: "#fff", boxShadow: "0 4px 12px rgba(0,0,0,0.1)", borderRadius: "8px" }}>
-            <h2 style={{ textAlign: "center", color: "#333" }}>AgencyHub</h2>
-            <h3 style={{ textAlign: "center", color: "#666", marginBottom: "20px" }}>Create New Agency Account</h3>
+        <div className="auth-container">
 
-            {error && <div style={{ color: "#d9534f", background: "#fdf7f7", padding: "10px", borderRadius: "4px", marginBottom: "15px", border: "1px solid #f5c6cb" }}>{error}</div>}
+            <div className="auth-card">
 
-            <form onSubmit={handleSubmit}>
-                <div style={{ marginBottom: "12px" }}>
-                    <label style={{ fontWeight: "500" }}>Agency Name</label><br />
-                    <input type="text" name="agencyName" value={formData.agencyName} onChange={handleChange} required style={{ width: "100%", padding: "8px", boxSizing: "border-box", borderRadius: "4px", border: "1px solid #ccc" }} />
-                </div>
+                <h1>Create Agency</h1>
 
-                <div style={{ marginBottom: "12px" }}>
-                    <label style={{ fontWeight: "500" }}>Agency Slug (e.g., my-agency)</label><br />
-                    <input type="text" name="agencySlug" value={formData.agencySlug} onChange={handleChange} required style={{ width: "100%", padding: "8px", boxSizing: "border-box", borderRadius: "4px", border: "1px solid #ccc" }} />
-                </div>
+                <p className="auth-subtitle">
+                    Create your AgencyHub account
+                </p>
 
-                <div style={{ marginBottom: "12px" }}>
-                    <label style={{ fontWeight: "500" }}>Full Name</label><br />
-                    <input type="text" name="fullName" value={formData.fullName} onChange={handleChange} required style={{ width: "100%", padding: "8px", boxSizing: "border-box", borderRadius: "4px", border: "1px solid #ccc" }} />
-                </div>
+                {error && (
+                    <div className="error-message">
+                        {error}
+                    </div>
+                )}
 
-                <div style={{ marginBottom: "12px" }}>
-                    <label style={{ fontWeight: "500" }}>Email Address</label><br />
-                    <input type="email" name="email" value={formData.email} onChange={handleChange} required style={{ width: "100%", padding: "8px", boxSizing: "border-box", borderRadius: "4px", border: "1px solid #ccc" }} />
-                </div>
+                {success && (
+                    <div className="success-message">
+                        {success}
+                    </div>
+                )}
 
-                <div style={{ marginBottom: "20px" }}>
-                    <label style={{ fontWeight: "500" }}>Password</label><br />
-                    <input type="password" name="password" value={formData.password} onChange={handleChange} required style={{ width: "100%", padding: "8px", boxSizing: "border-box", borderRadius: "4px", border: "1px solid #ccc" }} />
-                </div>
+                <form onSubmit={handleSubmit}>
 
-                <button type="submit" disabled={loading} style={{ width: "100%", padding: "10px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "4px", cursor: "pointer", fontWeight: "bold" }}>
-                    {loading ? "Registering..." : "Register Agency"}
-                </button>
-            </form>
+                    <div className="form-group">
+                        <label htmlFor="agencyName">
+                            Agency Name
+                        </label>
 
-            <p style={{ marginTop: "15px", textAlign: "center" }}>
-                Already have an account? <Link to="/login" style={{ color: "#007bff" }}>Sign In</Link>
-            </p>
+                        <input
+                            id="agencyName"
+                            type="text"
+                            name="agencyName"
+                            value={formData.agencyName}
+                            onChange={handleChange}
+                            autoComplete="organization"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="agencySlug">
+                            Agency Slug
+                        </label>
+
+                        <input
+                            id="agencySlug"
+                            type="text"
+                            name="agencySlug"
+                            value={formData.agencySlug}
+                            onChange={handleChange}
+                            placeholder="my-agency"
+                            autoComplete="off"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="agencyEmail">
+                            Agency Email
+                        </label>
+
+                        <input
+                            id="agencyEmail"
+                            type="email"
+                            name="agencyEmail"
+                            value={formData.agencyEmail}
+                            onChange={handleChange}
+                            autoComplete="email"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="firstName">
+                            First Name
+                        </label>
+
+                        <input
+                            id="firstName"
+                            type="text"
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            autoComplete="given-name"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="lastName">
+                            Last Name
+                        </label>
+
+                        <input
+                            id="lastName"
+                            type="text"
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            autoComplete="family-name"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="email">
+                            User Email
+                        </label>
+
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            autoComplete="email"
+                            required
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="phone">
+                            Phone
+                        </label>
+
+                        <input
+                            id="phone"
+                            type="tel"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            autoComplete="tel"
+                        />
+                    </div>
+
+                    <div className="form-group">
+                        <label htmlFor="password">
+                            Password
+                        </label>
+
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            autoComplete="new-password"
+                            required
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="primary-button"
+                        disabled={loading}
+                    >
+                        {loading
+                            ? "Creating account..."
+                            : "Register"}
+                    </button>
+
+                </form>
+
+                <p className="auth-footer">
+                    Already have an account?{" "}
+                    <Link to="/login">
+                        Login
+                    </Link>
+                </p>
+
+            </div>
+
         </div>
     );
 }
+
+export default Register;
