@@ -86,6 +86,9 @@ builder.Services.AddScoped<
     IProjectTaskService,
     AgencyHub.API.ProjectTaskService>();
 
+// AI Chat Service HTTP Client Registration
+builder.Services.AddHttpClient<AIChatService>();
+
 // ============================================================
 // JWT SETTINGS
 // ============================================================

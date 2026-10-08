@@ -22,8 +22,16 @@ function Sidebar() {
                     Tasks
                 </NavLink>
 
+                <NavLink to="/face-verification">
+                    👤 Face Verification
+                </NavLink>
+
                 <NavLink to="/profile">
                     Profile
+                </NavLink>
+
+                <NavLink to="/ai-assistant">
+                    🤖 AI Assistant
                 </NavLink>
             </nav>
         </aside>

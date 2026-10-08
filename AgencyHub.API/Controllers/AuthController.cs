@@ -12,7 +12,9 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly ITenantContext _tenantContext;
 
-    public AuthController(IAuthService authService, ITenantContext tenantContext)
+    public AuthController(
+        IAuthService authService,
+        ITenantContext tenantContext)
     {
         _authService = authService;
         _tenantContext = tenantContext;
@@ -20,34 +22,45 @@ public class AuthController : ControllerBase
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register(RegisterRequest request)
+    public async Task<IActionResult> Register(
+        RegisterRequest request)
     {
         var response = await _authService.RegisterAsync(request);
+
         return Ok(response);
     }
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login(LoginRequest request)
+    public async Task<IActionResult> Login(
+        LoginRequest request)
     {
         var response = await _authService.LoginAsync(request);
+
         return Ok(response);
     }
 
     [HttpPost("refresh")]
     [AllowAnonymous]
-    public async Task<IActionResult> Refresh(RefreshTokenRequest request)
+    public async Task<IActionResult> Refresh(
+        RefreshTokenRequest request)
     {
         var response = await _authService.RefreshTokenAsync(request);
+
         return Ok(response);
     }
 
     [HttpPost("logout")]
     [Authorize]
-    public async Task<IActionResult> Logout(RefreshTokenRequest request)
+    public async Task<IActionResult> Logout(
+        RefreshTokenRequest request)
     {
         await _authService.LogoutAsync(request.RefreshToken);
-        return Ok(new { message = "Logged out successfully." });
+
+        return Ok(new
+        {
+            message = "Logged out successfully."
+        });
     }
 
     [HttpGet("profile")]
