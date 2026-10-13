@@ -7,9 +7,11 @@ using AgencyHub.Application.Services;
 using AgencyHub.Application.Validators;
 using AgencyHub.Infrastructure;
 using AgencyHub.Infrastructure.Persistence;
+using AgencyHub.Infrastructure.Services;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
@@ -74,9 +76,7 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 builder.Services.AddScoped<IAuthService, AuthenticationService>();
 
-builder.Services.AddScoped<
-    IClientService,
-    AgencyHub.API.ClientService>();
+builder.Services.AddScoped<IClientService, ClientService>();
 
 builder.Services.AddScoped<
     IProjectService,
@@ -178,12 +178,6 @@ builder.Services
                 RoleClaimType =
                     System.Security.Claims.ClaimTypes.Role
             };
-
-        // ----------------------------------------------------
-        // OPTIONAL DEBUGGING
-        // ----------------------------------------------------
-        // Temporarily useful while fixing JWT problems.
-        // Do NOT keep detailed token logging in production.
 
         options.Events = new JwtBearerEvents
         {

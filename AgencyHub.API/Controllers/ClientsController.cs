@@ -44,4 +44,40 @@ public class ClientsController : ControllerBase
             $"/api/clients/{client.Id}",
             client);
     }
+
+    // =========================================================
+    // UPDATE CLIENT
+    // Restricted: Only users with the 'AgencyAdmin' role can update clients
+    // =========================================================
+
+    [HttpPut("{id}")]
+    [Authorize(Roles = "AgencyAdmin")]
+    public async Task<IActionResult> Update(Guid id, [FromBody] UpdateClientRequest request)
+    {
+        var updatedClient = await _clientService.UpdateClientAsync(id, request);
+        if (updatedClient == null)
+        {
+            return NotFound(new { message = "Client not found." });
+        }
+
+        return Ok(updatedClient);
+    }
+
+    // =========================================================
+    // DELETE CLIENT
+    // Restricted: Only users with the 'AgencyAdmin' role can delete clients
+    // =========================================================
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "AgencyAdmin")]
+    public async Task<IActionResult> Delete(Guid id)
+    {
+        var success = await _clientService.DeleteClientAsync(id);
+        if (!success)
+        {
+            return NotFound(new { message = "Client not found." });
+        }
+
+        return NoContent();
+    }
 }
