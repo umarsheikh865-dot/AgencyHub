@@ -1,0 +1,13 @@
+version: 1.0
+runtime: dotnet9
+build:
+  commands:
+    build:
+      - dotnet publish -c Release -o out
+run:
+  command: dotnet out/AgencyHub.API.dll
+  network:
+    port: 8080
+  env:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: Production
