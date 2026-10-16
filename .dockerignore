@@ -1,0 +1,8 @@
+**/bin/
+**/obj/
+**/node_modules/
+**/dist/
+**/.vs/
+.git/
+AgencyHub.API/publish/
+.env
