@@ -6,3 +6,4 @@
 .git/
 AgencyHub.API/publish/
 .env
+certbot/

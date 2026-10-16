@@ -21,3 +21,4 @@ appsettings.Production.json
 
 .DS_Store
 Thumbs.db
+certbot/
