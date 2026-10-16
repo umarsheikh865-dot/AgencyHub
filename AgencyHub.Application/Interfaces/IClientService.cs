@@ -12,4 +12,11 @@ public interface IClientService
 
     Task<Client> CreateClientAsync(
         CreateClientRequest request);
+
+    Task<Client?> UpdateClientAsync(
+        Guid id,
+        UpdateClientRequest request);
+
+    Task<bool> DeleteClientAsync(
+        Guid id);
 }
